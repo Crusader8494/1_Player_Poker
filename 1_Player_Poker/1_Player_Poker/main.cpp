@@ -29,6 +29,7 @@ int main() {
 		bankValue += returnValueOfBet;
 		std::cout << "You Won " << returnValueOfBet << std::endl;
 		std::cout << "Your Bank current has: " << bankValue << " coins" << std::endl;
+
 		//cleanup
 		userInputVector.clear();
 		userInputVector.shrink_to_fit();
