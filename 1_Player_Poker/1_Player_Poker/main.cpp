@@ -35,14 +35,14 @@ int main() {
 		returnValueOfBet = Hand_1->determineHandValue(betValue, Hand_1);
 
 		//add or subtract from bank
-		bankValue += returnValueOfBet;
 		if (returnValueOfBet >= 0) {
 			std::cout << "You Won " << returnValueOfBet << std::endl;
+			bankValue += returnValueOfBet; // already subtracted in initial bet so we only need this in the win condition
 		}
 		else {
 			std::cout << "You Lost " << (-1 * returnValueOfBet) << std::endl;
 		}
-		std::cout << "Your Bank current has: " << bankValue << " coins" << std::endl;
+		std::cout << "Your Bank currently has: " << bankValue << " coin(s)" << std::endl;
 
 		//cleanup
 		userInputVector.clear();
@@ -53,7 +53,7 @@ int main() {
 		//pause
 		if (bankValue <= 0) {
 			system("CLS");
-			std::cout << "YOU LOSE" << std::endl;
+			std::cout << "YOU LOSE!" << std::endl;
 			return 0;
 		}
 		system("PAUSE");
