@@ -303,7 +303,8 @@ int cardHand::determineHandValue(int betValue, cardHand* Hand) {
 		{
 			for (auto& item : Hand->winningHandsMap) { //This is for readabillity. I would fix this later.
 				if (item.first == RoyalFlush) {
-					return item.second;
+					std::cout << "HAND: ROYAL FLUSH" << std::endl;
+					return item.second * betValue;
 				}
 			}
 		}
@@ -326,7 +327,8 @@ int cardHand::determineHandValue(int betValue, cardHand* Hand) {
 	if (FourOfAKindFound == true) {
 		for (auto& item : Hand->winningHandsMap) {
 			if (item.first == FourOfAKind) {
-				return item.second;
+				std::cout << "HAND: FOUR OF A KIND" << std::endl;
+				return item.second * betValue;
 			}
 		}
 	}
@@ -357,7 +359,8 @@ int cardHand::determineHandValue(int betValue, cardHand* Hand) {
 	if (cardValueMaxA == 3 && cardValueMaxB == 2 || cardValueMaxA == 2 && cardValueMaxB == 3) {
 		for (auto& item : Hand->winningHandsMap) {
 			if (item.first == FullHouse) {
-				return item.second;
+				std::cout << "HAND: FULL HOUSE" << std::endl;
+				return item.second * betValue;
 			}
 		}
 	}
@@ -370,7 +373,8 @@ int cardHand::determineHandValue(int betValue, cardHand* Hand) {
 				if (Hand->m_hand.at(3).m_value == Hand->m_hand.at(4).m_value - 1) {
 					for (auto& item : Hand->winningHandsMap) {
 						if (item.first == FullHouse) {
-							return item.second;
+							std::cout << "HAND: STRAIGHT" << std::endl;
+							return item.second * betValue;
 						}
 					}
 				}
@@ -379,8 +383,38 @@ int cardHand::determineHandValue(int betValue, cardHand* Hand) {
 	}
 
 
-	//Determine 3 of a kind
+	//Determine 3 of a kind and Pair
+	int likeCounter = 0;
+	for (int i = 0; i <= 2; i++) {
+		for (int j = i; j <= 4; j++) {
+			if (Hand->m_hand.at(i).m_value == Hand->m_hand.at(j).m_value) {
+				likeCounter++;
+			}
+			if (likeCounter == 3) {
+				for (auto& item : Hand->winningHandsMap) {
+					if (item.first == ThreeOfAKind) {
+						std::cout << "HAND: THREE OF A KIND" << std::endl;
+						return item.second * betValue;
+					}
+				}
+			}
+		}
+		//Determine Pair
+		if (likeCounter == 2) {
+			for (auto& item : Hand->winningHandsMap) {
+				if (item.first == Pair) {
+					std::cout << "HAND: PAIR" << std::endl;
+					return item.second * betValue;
+				}
+			}
+		}
+		else {
+			likeCounter = 0;
+		}
+	}
 
+
+	//else
 	return returnValue;
 }
 
@@ -411,29 +445,96 @@ bool cardHand::isThereACardSuit(cardDef::suitType Suit, cardHand* Hand) {
 }
 
 void cardHand::sortHand(cardHand* Hand) {
-	std::vector<singleCard*> copyHand = {};
-	copyHand.resize(5);
-	
+	std::vector<singleCard> copyHand = {};
+	//copyHand.resize(0);
+
+	//copyHand.swap(Hand->m_hand);
+
+	for (auto i : Hand->m_hand)
+	{
+		copyHand.push_back(i);
+	}
+
+	singleCard copyCard1;
+	singleCard copyCard2;
+	singleCard copyCard3;
+	singleCard copyCard4;
+	singleCard copyCard5;
+	singleCard tempCard1;
+
+	copyCard1 = copyHand.at(0);
+	copyCard2 = copyHand.at(1);
+	copyCard3 = copyHand.at(2);
+	copyCard4 = copyHand.at(3);
+	copyCard5 = copyHand.at(4);
+
+
+
 	//Sort low to high for both enums for suit and value
-	int sortArray[5] = { 0,0,0,0,0 };
-	for (int i = 0; i <= 4; i++)
+	//First by value
+	bool rerunSort = true;
+
+	while (rerunSort == true)
 	{
-		for (int j = 0; j <= 4; j++)
+		rerunSort = false;
+
+		if ((int)copyCard1.m_value > (int)copyCard2.m_value)
 		{
+			tempCard1 = copyCard2;
+			copyCard2 = copyCard1;
+			copyCard1 = tempCard1;
 
+			rerunSort = true;
 		}
+		if ((int)copyCard2.m_value > (int)copyCard3.m_value)
+		{
+			tempCard1 = copyCard3;
+			copyCard3 = copyCard2;
+			copyCard2 = tempCard1;
 
-		//copyHand.push_back(Hand->m_hand.at(k));
+			rerunSort = true;
+		}
+		if ((int)copyCard3.m_value > (int)copyCard4.m_value)
+		{
+			tempCard1 = copyCard4;
+			copyCard4 = copyCard3;
+			copyCard3 = tempCard1;
+
+			rerunSort = true;
+		}
+		if ((int)copyCard4.m_value > (int)copyCard5.m_value)
+		{
+			tempCard1 = copyCard5;
+			copyCard5 = copyCard4;
+			copyCard4 = tempCard1;
+
+			rerunSort = true;
+		}
 	}
 
-	//clear original hand and place copyHand back in to main Hand so that the Hand can be returned
-	Hand->discardCards(Hand);
-	singleCard tempCard;
-	for (int i = 0; i <= 4; i++)
+	copyHand.clear();
+	copyHand.resize(0);
+
+	copyHand.push_back(copyCard1);
+	copyHand.push_back(copyCard2);
+	copyHand.push_back(copyCard3);
+	copyHand.push_back(copyCard4);
+	copyHand.push_back(copyCard5);
+
+	Hand->m_hand.clear();
+
+	for (auto i : copyHand)
 	{
-		tempCard.m_suit = copyHand.at(i)->m_suit;
-		tempCard.m_value = copyHand.at(i)->m_value;
-		Hand->m_hand.push_back(tempCard);
+		Hand->m_hand.push_back(i);
 	}
+
+	std::cout << "########################### Sorted Hand ###########################" << std::endl;
+	std::cout << (int)Hand->m_hand.at(0).m_value << " of " << (int)Hand->m_hand.at(0).m_suit << std::endl;
+	std::cout << (int)Hand->m_hand.at(1).m_value << " of " << (int)Hand->m_hand.at(1).m_suit << std::endl;
+	std::cout << (int)Hand->m_hand.at(2).m_value << " of " << (int)Hand->m_hand.at(2).m_suit << std::endl;
+	std::cout << (int)Hand->m_hand.at(3).m_value << " of " << (int)Hand->m_hand.at(3).m_suit << std::endl;
+	std::cout << (int)Hand->m_hand.at(4).m_value << " of " << (int)Hand->m_hand.at(4).m_suit << std::endl;
+	std::cout << "########################### Sorted Hand ###########################" << std::endl;
+
 	return;
 }
