@@ -258,31 +258,86 @@ void cardHand::discardCards(cardHand* Hand) {
 
 void cardHand::printHand(cardHand* Hand) {
 
+	std::cout << std::endl;
 	std::cout << "################ HAND Begin ################" << std::endl;
 
-	std::string spades = "Spades";
-	std::string clubs = "Clubs";
-	std::string hearts = "Hearts";
-	std::string diamonds = "Diamonds";
+	std::vector<std::string> vals = {};
+	std::vector<std::string> suits = {};
 
+	//value
+	for (int i = 0; i != Hand->m_hand.size(); i++) {
+		switch (Hand->m_hand.at(i).m_value) {
+		case 0:
+			vals.push_back("Ace");
+			break;
+		case 1:
+			vals.push_back("One");
+			break;
+		case 2:
+			vals.push_back("Two");
+			break;
+		case 3:
+			vals.push_back("Three");
+			break;
+		case 4:
+			vals.push_back("Four");
+			break;
+		case 5:
+			vals.push_back("Five");
+			break;
+		case 6:
+			vals.push_back("Six");
+			break;
+		case 7:
+			vals.push_back("Seven");
+			break;
+		case 8:
+			vals.push_back("Eight");
+			break;
+		case 9:
+			vals.push_back("Nine");
+			break;
+		case 10:
+			vals.push_back("Ten");
+			break;
+		case 11:
+			vals.push_back("Jack");
+			break;
+		case 12:
+			vals.push_back("Queen");
+			break;
+		case 13:
+			vals.push_back("King");
+			break;
+
+		}
+	}
+
+	//suit
 	for (int i = 0; i != Hand->m_hand.size(); i++) {
 		switch (Hand->m_hand.at(i).m_suit) {
 		case 0:
-			std::cout << Hand->m_hand.at(i).m_value << " of " << spades << std::endl;
+			suits.push_back("Spades");
 			break;
 		case 1:
-			std::cout << Hand->m_hand.at(i).m_value << " of " << clubs << std::endl;
+			suits.push_back("Clubs");
 			break;
 		case 2:
-			std::cout << Hand->m_hand.at(i).m_value << " of " << hearts << std::endl;
+			suits.push_back("Hearts");
 			break;
 		case 3:
-			std::cout << Hand->m_hand.at(i).m_value << " of " << diamonds << std::endl;
+			suits.push_back("Diamonds");
 			break;
 		}
 	}
 
+	//display
+	for (int i = 0; i != Hand->m_hand.size(); i++) {
+		std::cout << vals.at(i) << " of " << suits.at(i) << std::endl;
+	}
+
 	std::cout << "################# HAND End #################" << std::endl;
+	std::cout << std::endl;
 
 	return;
 }
@@ -528,13 +583,13 @@ void cardHand::sortHand(cardHand* Hand) {
 		Hand->m_hand.push_back(i);
 	}
 
-	std::cout << "########################### Sorted Hand ###########################" << std::endl;
-	std::cout << (int)Hand->m_hand.at(0).m_value << " of " << (int)Hand->m_hand.at(0).m_suit << std::endl;
-	std::cout << (int)Hand->m_hand.at(1).m_value << " of " << (int)Hand->m_hand.at(1).m_suit << std::endl;
-	std::cout << (int)Hand->m_hand.at(2).m_value << " of " << (int)Hand->m_hand.at(2).m_suit << std::endl;
-	std::cout << (int)Hand->m_hand.at(3).m_value << " of " << (int)Hand->m_hand.at(3).m_suit << std::endl;
-	std::cout << (int)Hand->m_hand.at(4).m_value << " of " << (int)Hand->m_hand.at(4).m_suit << std::endl;
-	std::cout << "########################### Sorted Hand ###########################" << std::endl;
+	//std::cout << "########################### Sorted Hand ###########################" << std::endl;
+	//std::cout << (int)Hand->m_hand.at(0).m_value << " of " << (int)Hand->m_hand.at(0).m_suit << std::endl;
+	//std::cout << (int)Hand->m_hand.at(1).m_value << " of " << (int)Hand->m_hand.at(1).m_suit << std::endl;
+	//std::cout << (int)Hand->m_hand.at(2).m_value << " of " << (int)Hand->m_hand.at(2).m_suit << std::endl;
+	//std::cout << (int)Hand->m_hand.at(3).m_value << " of " << (int)Hand->m_hand.at(3).m_suit << std::endl;
+	//std::cout << (int)Hand->m_hand.at(4).m_value << " of " << (int)Hand->m_hand.at(4).m_suit << std::endl;
+	//std::cout << "########################### Sorted Hand ###########################" << std::endl;
 
 	return;
 }
