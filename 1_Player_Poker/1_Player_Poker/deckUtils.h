@@ -32,7 +32,7 @@ public:
 	};
 
 	enum winningHands {
-		TwoPair,
+		Pair,
 		ThreeOfAKind,
 		Straight,
 		Flush,
@@ -43,7 +43,7 @@ public:
 	};
 
 	std::map<winningHands, int> winningHandsMap {
-		{ winningHands::TwoPair, 1},
+		{ winningHands::Pair, 1},
 		{ winningHands::ThreeOfAKind, 3},
 		{ winningHands::Straight, 4},
 		{ winningHands::Flush, 6},

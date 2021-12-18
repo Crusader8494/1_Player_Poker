@@ -303,6 +303,7 @@ int cardHand::determineHandValue(int betValue, cardHand* Hand) {
 		{
 			for (auto& item : Hand->winningHandsMap) { //This is for readabillity. I would fix this later.
 				if (item.first == RoyalFlush) {
+					std::cout << "HAND: ROYAL FLUSH" << std::endl;
 					return item.second * betValue;
 				}
 			}
@@ -326,6 +327,7 @@ int cardHand::determineHandValue(int betValue, cardHand* Hand) {
 	if (FourOfAKindFound == true) {
 		for (auto& item : Hand->winningHandsMap) {
 			if (item.first == FourOfAKind) {
+				std::cout << "HAND: FOUR OF A KIND" << std::endl;
 				return item.second * betValue;
 			}
 		}
@@ -357,6 +359,7 @@ int cardHand::determineHandValue(int betValue, cardHand* Hand) {
 	if (cardValueMaxA == 3 && cardValueMaxB == 2 || cardValueMaxA == 2 && cardValueMaxB == 3) {
 		for (auto& item : Hand->winningHandsMap) {
 			if (item.first == FullHouse) {
+				std::cout << "HAND: FULL HOUSE" << std::endl;
 				return item.second * betValue;
 			}
 		}
@@ -370,6 +373,7 @@ int cardHand::determineHandValue(int betValue, cardHand* Hand) {
 				if (Hand->m_hand.at(3).m_value == Hand->m_hand.at(4).m_value - 1) {
 					for (auto& item : Hand->winningHandsMap) {
 						if (item.first == FullHouse) {
+							std::cout << "HAND: STRAIGHT" << std::endl;
 							return item.second * betValue;
 						}
 					}
@@ -379,10 +383,38 @@ int cardHand::determineHandValue(int betValue, cardHand* Hand) {
 	}
 
 
-	//Determine 3 of a kind
+	//Determine 3 of a kind and Pair
+	int likeCounter = 0;
+	for (int i = 0; i <= 2; i++) {
+		for (int j = i; j <= 4; j++) {
+			if (Hand->m_hand.at(i).m_value == Hand->m_hand.at(j).m_value) {
+				likeCounter++;
+			}
+			if (likeCounter == 3) {
+				for (auto& item : Hand->winningHandsMap) {
+					if (item.first == ThreeOfAKind) {
+						std::cout << "HAND: THREE OF A KIND" << std::endl;
+						return item.second * betValue;
+					}
+				}
+			}
+		}
+		//Determine Pair
+		if (likeCounter == 2) {
+			for (auto& item : Hand->winningHandsMap) {
+				if (item.first == Pair) {
+					std::cout << "HAND: PAIR" << std::endl;
+					return item.second * betValue;
+				}
+			}
+		}
+		else {
+			likeCounter = 0;
+		}
+	}
 
-	//Determine 2 of a kind
 
+	//else
 	return returnValue;
 }
 
@@ -505,65 +537,4 @@ void cardHand::sortHand(cardHand* Hand) {
 	std::cout << "########################### Sorted Hand ###########################" << std::endl;
 
 	return;
-
-	//Then by suit
-	/*
-	rerunSort = true;
-
-	while (rerunSort == true)
-	{
-		rerunSort = false;
-
-		if ((int)copyCard1.m_suit > (int)copyCard2.m_suit)
-		{
-			tempCard1 = copyCard2;
-			copyCard2 = copyCard1;
-			copyCard1 = tempCard1;
-
-			rerunSort = true;
-		}
-		if ((int)copyCard2.m_suit > (int)copyCard3.m_suit)
-		{
-			tempCard1 = copyCard3;
-			copyCard3 = copyCard2;
-			copyCard2 = tempCard1;
-
-			rerunSort = true;
-		}
-		if ((int)copyCard3.m_suit > (int)copyCard4.m_suit)
-		{
-			tempCard1 = copyCard4;
-			copyCard4 = copyCard3;
-			copyCard3 = tempCard1;
-
-			rerunSort = true;
-		}
-		if ((int)copyCard4.m_suit > (int)copyCard5.m_suit)
-		{
-			tempCard1 = copyCard5;
-			copyCard5 = copyCard4;
-			copyCard4 = tempCard1;
-
-			rerunSort = true;
-		}
-	}
-	
-
-	std::cout << (int)copyCard1.m_value << " of " << (int)copyCard1.m_suit << std::endl;
-	std::cout << (int)copyCard2.m_value << " of " << (int)copyCard2.m_suit << std::endl;
-	std::cout << (int)copyCard3.m_value << " of " << (int)copyCard3.m_suit << std::endl;
-	std::cout << (int)copyCard4.m_value << " of " << (int)copyCard4.m_suit << std::endl;
-	std::cout << (int)copyCard5.m_value << " of " << (int)copyCard5.m_suit << std::endl;
-	*/
-	/*
-	//clear original hand and place copyHand back in to main Hand so that the Hand can be returned
-	Hand->discardCards(Hand);
-	singleCard tempCard;
-	for (int i = 0; i <= 4; i++)
-	{
-		tempCard.m_suit = copyHand.at(i)->m_suit;
-		tempCard.m_value = copyHand.at(i)->m_value;
-		Hand->m_hand.push_back(tempCard);
-	}
-	*/
 }

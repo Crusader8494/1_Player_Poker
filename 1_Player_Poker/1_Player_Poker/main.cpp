@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 #include "main.h"
 #include "deckUtils.h"
 
@@ -8,10 +9,18 @@ int main() {
 	cardHand* Hand_1 = new cardHand;
 
 	int bankValue = 1000;
+	int& bankValueRef = bankValue;
 	int betValue = 1;
+	int& betValueRef = betValue;
 	int returnValueOfBet = 0;
 
 	while (1) {
+		//clear screen
+		system("CLS");
+
+		//retrieve bet
+		retrieveBetValue(betValueRef, bankValueRef);
+
 		//setup
 		initializePoker(Deck_1); //setup Game, Objects and Variables
 		drawHand(Deck_1, Hand_1);
@@ -27,7 +36,12 @@ int main() {
 
 		//add or subtract from bank
 		bankValue += returnValueOfBet;
-		std::cout << "You Won " << returnValueOfBet << std::endl;
+		if (returnValueOfBet >= 0) {
+			std::cout << "You Won " << returnValueOfBet << std::endl;
+		}
+		else {
+			std::cout << "You Lost " << (-1 * returnValueOfBet) << std::endl;
+		}
 		std::cout << "Your Bank current has: " << bankValue << " coins" << std::endl;
 
 		//cleanup
@@ -35,6 +49,14 @@ int main() {
 		userInputVector.shrink_to_fit();
 		Deck_1->discardDeck();
 		Hand_1->discardCards(Hand_1);
+
+		//pause
+		if (bankValue <= 0) {
+			system("CLS");
+			std::cout << "YOU LOSE" << std::endl;
+			return 0;
+		}
+		system("PAUSE");
 	}
 	return 0;
 }
@@ -107,5 +129,26 @@ void internalDiscard(std::vector<std::string> userInput, cardDeck* Deck, cardHan
 	
 	Hand->replaceCards(Deck, Hand, userInput); // fix order of arguments later
 	
+	return;
+}
+
+void retrieveBetValue(int& bet, int& bank) {
+
+	std::cout << "Your current bank value is: " << bank << std::endl;
+
+	std::cout << "Place a bet: ";
+	std::cin >> bet;
+	if (bet < 1) {
+		std::cout << "ERROR: Bet must be a positive integer >= 1!" << std::endl;
+		retrieveBetValue(bet, bank);
+	}
+	if (bet > bank) {
+		std::cout << "ERROR: You cannot bet more than you have." << std::endl;
+		retrieveBetValue(bet, bank);
+	}
+
+	bank -= bet;
+
+	std::cout << std::endl;
 	return;
 }
